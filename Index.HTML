@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máquina de Calcular Clásica</title>
+    <style>
+        /* === DISEÑO VINTAGE / RETRO === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* === NUEVO FONDO VINTAGE === 
+               Imagen de un mapa antiguo con un filtro oscuro encima para resaltar la calculadora */
+            background-image: linear-gradient(rgba(62, 39, 35, 0.5), rgba(62, 39, 35, 0.75)), 
+                              url('https://images.unsplash.com/photo-1518380271708-3162a049103d?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Georgia', 'Times New Roman', serif; /* Fuente clásica */
+        }
+
+        .calculator-card {
+            background-color: #f5f0e6; /* Color papel pergamino */
+            padding: 40px;
+            border-radius: 8px; /* Bordes menos redondeados */
+            width: 100%;
+            max-width: 460px;
+            /* Sombra dura y borde doble para aspecto mecánico/físico */
+            box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.6);
+            border: 6px double #4e342e; 
+        }
+
+        h2 {
+            text-align: center;
+            color: #3e2723;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid #8d6e63;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #4e342e;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* === ESTILO DE LOS NÚMEROS (TIPO MÁQUINA DE ESCRIBIR) === */
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #ffffff;
+            border: 2px solid #8d6e63;
+            color: #212121;
+            border-radius: 4px;
+            /* Cambio de fuente para los números a estilo máquina de escribir */
+            font-family: 'Courier New', Courier, monospace; 
+            font-size: 22px;
+            font-weight: bold;
+            outline: none;
+            /* Sombra interior para que parezca hundido */
+            box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.15);
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #3e2723;
+            background-color: #fffdf5;
+        }
+
+        /* Ocultar las flechas por defecto */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* === REJILLA DE BOTONES TIPO TECLAS MECÁNICAS === */
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            border: 2px solid #271c19;
+            padding: 12px;
+            color: #f5f0e6;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            text-transform: uppercase;
+            /* Sombra dura para efecto 3D de tecla antigua */
+            box-shadow: 3px 4px 0px #271c19;
+        }
+
+        .btn:active {
+            transform: translateY(4px) translateX(3px);
+            box-shadow: 0px 0px 0px #271c19;
+        }
+
+        /* Colores desaturados estilo retro */
+        .btn-suma { background-color: #a05252; }  /* Rojo ladrillo desteñido */
+        .btn-resta { background-color: #4b6b50; } /* Verde militar/oliva */
+        .btn-multi { background-color: #4a607a; } /* Azul cadete */
+        .btn-div { background-color: #cfa04f; color: #271c19; }   /* Mostaza/Latón */
+
+        /* Botón de limpiar */
+        .btn-clear {
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #3e2723;
+            color: #e0e0e0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-radius: 8px;
+            border: 2px solid #1a100e;
+            cursor: pointer;
+            box-shadow: 3px 4px 0px #1a100e;
+            text-transform: uppercase;
+        }
+
+        .btn-clear:active {
+            transform: translateY(4px) translateX(3px);
+            box-shadow: 0px 0px 0px #1a100e;
+        }
+
+        /* === CAJA DE RESULTADO (TIPO TICKET O PAPEL) === */
+        #resultado-box {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #faf7f0;
+            border: 2px dashed #8d6e63; /* Borde punteado como ticket recortado */
+            border-radius: 2px;
+            text-align: center;
+            display: none;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+        }
+
+        #resultado-box h3 {
+            font-size: 14px;
+            color: #5d4037;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        #resultado {
+            display: block;
+            font-size: 38px;
+            color: #212121;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace; /* Fuente de números de máquina */
+            /* Efecto de tinta impresa ligeramente irregular */
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.2); 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-card">
+        <h2>Máquina de Calcular</h2>
+        
+        <div class="input-group">
+            <label>Valor I:</label>
+            <input type="number" id="num1" placeholder="0">
+        </div>
+
+        <div class="input-group">
+            <label>Valor II:</label>
+            <input type="number" id="num2" placeholder="0">
+        </div>
+
+        <div class="buttons-grid">
+            <button onclick="calcular('suma')" class="btn btn-suma">+ Sumar</button>
+            <button onclick="calcular('resta')" class="btn btn-resta">- Restar</button>
+            <button onclick="calcular('multiplicacion')" class="btn btn-multi">x Multiplicar</button>
+            <button onclick="calcular('division')" class="btn btn-div">÷ Dividir</button>
+        </div>
+
+        <button onclick="limpiar()" class="btn-clear">Restablecer</button>
+
+        <div id="resultado-box">
+            <h3>Total Calculado</h3>
+            <span id="resultado">0</span>
+        </div>
+    </div>
+
+    <script>
+        // === LÓGICA DE JAVASCRIPT INTACTA ===
+        function calcular(operacion) {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const num2 = parseFloat(document.getElementById('num2').value);
+            const resultadoBox = document.getElementById('resultado-box');
+            const resultadoText = document.getElementById('resultado');
+
+            if (isNaN(num1) || isNaN(num2)) {
+                alert("Por favor, introduzca ambos valores.");
+                return;
+            }
+
+            let resultado = 0;
+
+            switch (operacion) {
+                case 'suma': resultado = num1 + num2; break;
+                case 'resta': resultado = num1 - num2; break;
+                case 'multiplicacion': resultado = num1 * num2; break;
+                case 'division': 
+                    if (num2 === 0) {
+                        alert("Error mecánico: División por cero no permitida.");
+                        return;
+                    }
+                    resultado = num1 / num2; 
+                    break;
+            }
+
+            // Muestra un máximo de 4 decimales si el número no es entero
+            resultadoText.innerText = Number.isInteger(resultado) ? resultado : resultado.toFixed(4).replace(/\.?0+$/, "");
+            resultadoBox.style.display = "block";
+        }
+
+        function limpiar() {
+            document.getElementById('num1').value = "";
+            document.getElementById('num2').value = "";
+            document.getElementById('resultado-box').style.display = "none";
+        }
+    </script>
+</body>
+</html>
